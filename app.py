@@ -23,9 +23,9 @@ if uploaded_file is not None:
     if st.button("Simplify This ✨"):
         with st.spinner("AI is thinking..."):
             try:
-                # Using Llama 3.2 11b Vision which is fast and completely free on Groq
+                # Using Llama 3.2 90b Vision which is fast and completely free on Groq
                 response = client.chat.completions.create(
-                    model="llama-3.2-11b-vision-preview",
+                    model="llama-3.2-90b-vision-preview",
                     messages=[
                         {
                             "role": "user",
