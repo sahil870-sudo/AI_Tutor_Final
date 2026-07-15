@@ -26,7 +26,7 @@ if uploaded_file is not None:
     """
     
     if st.button("Simplify This ✨"):
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-2.5-flash')
         
         with st.spinner("AI is thinking..."):
             response = model.generate_content([prompt, image])
