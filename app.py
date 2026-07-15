@@ -1,9 +1,9 @@
 import streamlit as st
-import google.generativeai as genai
+from openai import OpenAI
 from PIL import Image
 
-# 1. Configure Gemini API (Using Streamlit Secrets so GitHub doesn't block it)
-genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+# 1. Configure OpenAI API (Using Streamlit Secrets)
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 st.title("Snap & Simplify AI Tutor 📚")
 st.write("Upload a picture of your textbook page and ask how you want it explained!")
@@ -20,15 +20,33 @@ if uploaded_file is not None:
     
     # 4. Instruction for the AI
     prompt = f"""
-    You are a very helpful and friendly tutor. Look at the educational image provided above. 
+    You are a very helpful and friendly tutor. Look at the educational image provided. 
     Explain the topic shown in the image based on the student's request: "{user_instruction}".
     Make it extremely simple, easy to understand, and use real-world examples.
     """
     
     if st.button("Simplify This ✨"):
-        model = genai.GenerativeModel('gemini-2.5-flash')
-        
         with st.spinner("AI is thinking..."):
-            response = model.generate_content([prompt, image])
-            st.success("Done!")
-            st.write(response.text)
+            try:
+                # Using GPT-4o mini which supports vision and is cost-effective
+                response = client.chat.completions.create(
+                    model="gpt-4o-mini",
+                    messages=[
+                        {
+                            "role": "user",
+                            "content": [
+                                {"type": "text", "text": prompt},
+                                {
+                                    "type": "image_url",
+                                    "image_url": {
+                                        "url": f"data:image/jpeg;base64,{uploaded_file.getvalue().hex()}"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                )
+                st.success("Done!")
+                st.write(response.choices[0].message.content)
+            except Exception as e:
+                st.error(f"Error: {e}")
