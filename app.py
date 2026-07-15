@@ -19,7 +19,7 @@ if uploaded_file is not None:
     st.image(image, caption='Uploaded Image', use_column_width=True)
     
     # 4. Corrected model name (100% stable version)
-    model = genai.GenerativeModel('gemini-2.5-flash')
+    model = genai.GenerativeModel('gemini-2.0-flash')
     
     if st.button("Simplify This ✨"):
         with st.spinner("AI is thinking..."):
